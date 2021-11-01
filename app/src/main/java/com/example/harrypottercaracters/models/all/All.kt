@@ -1,3 +1,3 @@
 package com.example.harrypottercaracters.models.all
 
-class allCharacters : ArrayList<allCharactersItem>()
+class All : ArrayList<AllItem>()

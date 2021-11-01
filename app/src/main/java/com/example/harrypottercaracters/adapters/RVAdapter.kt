@@ -7,14 +7,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.harrypottercaracters.R
-import com.example.harrypottercaracters.models.ItemsViewModel
+import com.example.harrypottercaracters.models.other.RVViewModel
+import com.squareup.picasso.Picasso
+import java.io.IOException
 
-class RVAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adapter<RVAdapter.ViewHolder>() {
+class RVAdapter(private val mList: List<RVViewModel>) : RecyclerView.Adapter<RVAdapter.ViewHolder>() {
 
-    // create new views
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // inflates the card_view_design view
-        // that is used to hold list item
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_view_design, parent, false)
 
@@ -25,12 +25,17 @@ class RVAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val ItemsViewModel = mList[position]
+        holder.textViewActor.text = ItemsViewModel.actor
+        holder.textViewCharacter.text = ItemsViewModel.character
+       // holder.textViewHouse.text = ItemsViewModel.house
+      val picasso = Picasso.get()
+//        picasso.load(ItemsViewModel.imageUrl).into(holder.imageView)
 
-        // sets the image to the imageview from our itemHolder class
-        holder.imageView.setImageResource(ItemsViewModel.image)
-
-        // sets the text to the textview from our itemHolder class
-        holder.textView.text = ItemsViewModel.text
+        if (ItemsViewModel.imageUrl.isNullOrEmpty()) {
+            holder.imageView.setImageResource(R.drawable.ic_launcher_background);
+        } else {
+            picasso.load(ItemsViewModel.imageUrl).into(holder.imageView)
+        }
 
     }
 
@@ -42,6 +47,9 @@ class RVAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adapter<
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageview)
-        val textView: TextView = itemView.findViewById(R.id.textView)
+        val textViewActor: TextView = itemView.findViewById(R.id.actorTV)
+        val textViewCharacter: TextView = itemView.findViewById(R.id.characterTV)
+        val textViewHouse: TextView = itemView.findViewById(R.id.houseTV)
+
     }
 }

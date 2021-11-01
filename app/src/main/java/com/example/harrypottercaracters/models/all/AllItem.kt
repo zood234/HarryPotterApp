@@ -1,6 +1,6 @@
-package com.example.harrypottercaracters.models.students
+package com.example.harrypottercaracters.models.all
 
-data class StudentsItem(
+data class AllItem(
     val actor: String,
     val house: String,
     val image: String,

@@ -1,98 +1,268 @@
 package com.example.harrypottercaracters
 
-import android.widget.Toast
-import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.app.Application
+import androidx.lifecycle.*
 import com.example.harrypottercaracters.interfaces.HarryPotterApi
-import com.example.harrypottercaracters.models.all.allCharacters
-import com.example.harrypottercaracters.models.staff.Staff
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.harrypottercaracters.models.*
+import com.example.harrypottercaracters.models.all.All
+import com.example.harrypottercaracters.models.house.House
+import com.example.harrypottercaracters.models.staff.Staffs
+import com.example.harrypottercaracters.models.staff.StaffsItem
+import com.example.harrypottercaracters.models.students.Students
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.IOException
 
-class HarryPotterViewModel:ViewModel() {
+class HarryPotterViewModel(application: Application): AndroidViewModel(application){
 
-var test = "blah blah"
-    var titleList = ArrayList<String?>()
-    var dateList = ArrayList<String>()
-    var urlList = ArrayList<String?>()
-    var pictureList = ArrayList<String?>()
-    var categoryList = ArrayList<String?>()
+    var allLiveData : MutableLiveData<All>  = MutableLiveData()
+    var houseLiveData : MutableLiveData<House>  = MutableLiveData()
+    var studentLiveData : MutableLiveData<Students>  = MutableLiveData()
+    var staffLiveData : MutableLiveData<Staffs> = MutableLiveData()
 
 
+    val readAllStaffData: LiveData<List<StaffTable>>
+    val readAllData: LiveData<List<AllTable>>
+//
+   val readStudentData: LiveData<List<StudentTable>>
+    val readGrifData: LiveData<List<GrifTable>>
+    val readHufData: LiveData<List<HufTable>>
+    val readSlyData: LiveData<List<SlyTable>>
+    val readRavData: LiveData<List<Ravtable>>
+     var internetOff: Boolean = false
+    lateinit var internetStatus: LiveData< Boolean>
+
+    private  val repository: HarryPotterRepository
+
+    init {
+        val userDao = HarryPotterDatabase.getDatabase(application).harryPotterDao()
+        repository = HarryPotterRepository(userDao)
+        readAllStaffData =repository.readAllStaffData
+        readAllData =repository.readAllData
+
+       readGrifData =repository.readGrifData
+       readStudentData =repository.readStudentData
+        readSlyData =repository.readSlyData
+        readHufData =repository.readHufData
+        readRavData =repository.readRavData
+    }
+
+    var staffsItemLiveData : MutableLiveData<StaffsItem> = MutableLiveData()
+
+
+fun getAllUsers(){
+
+}
     override fun onCleared() {
         super.onCleared()
     }
 
-    fun rvTester(){
-        titleList.add("fsd")
-        dateList.add("gsfsf")
-        urlList.add("fs")
-        pictureList.add("f")
-        categoryList.add("add")
-    }
 
-    fun getAllCharacters(){
-    val retrofit = Retrofit.Builder()
-            .baseUrl("http://hp-api.herokuapp.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(HarryPotterApi::class.java)
-        val call = service.all()
-        test = "THIS LINE3"
 
-        try {
 
-            call.enqueue(object : Callback<allCharacters> {
-
-                override fun onResponse(call: Call<allCharacters>, response: Response<allCharacters>) {
-
-                    println("the response code is " +response.code())
-                    if (response.code() == 200) {
-                        val characterData = response.body()!!
-                        println("response is good + The first name is " + characterData[0].name)
+    fun getAllLiveObserver(): MutableLiveData<All>{
+    return allLiveData
 }
-                }
-                override fun onFailure(call: Call<allCharacters>, t: Throwable) {
 
-                }
-            })}catch (e: IOException) {
-        }
+    fun getHouseLiveObserver(): MutableLiveData<House>{
+        return houseLiveData
+    }
+    fun getStudentLiveObserver(): MutableLiveData<Students>{
+        return studentLiveData
+    }
+    fun getStaffLiveObserver(): MutableLiveData<Staffs>{
+        return staffLiveData
     }
 
-    fun getStaff(){
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://hp-api.herokuapp.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(HarryPotterApi::class.java)
-        val call = service.staff()
 
-        try {
+    fun makeAPiAllCall(){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
 
-            call.enqueue(object : Callback<Staff> {
 
-                override fun onResponse(call: Call<Staff>, response: Response<Staff>) {
+            val retroInstance = RetroInstance.getInstance().create(HarryPotterApi::class.java)
+            val response = retroInstance.getAll()
 
-                    println("the response code is " +response.code())
-                    if (response.code() == 200) {
-                        val characterData = response.body()!!
-                        test ="response is good"
-                        println("response is good + The first name is " + characterData[0].name)
-                    }
+            allLiveData.postValue(response)
+
+                for (i in 0 until response.size) {
+                    val allTable = AllTable(i,response[i].actor, response[i].actor, response[i].image, response[i].name)
+                    addAllUser(allTable)
                 }
-                override fun onFailure(call: Call<Staff>, t: Throwable) {
-
-                }
-            })}catch (e: IOException) {
-
+            }
+            catch (e: IOException) {
             e.printStackTrace()
+                println("No INTERNET")
+                internetOff = true
+            }
         }
+    }
+
+    fun makeAPiHouseCall(houseType : String){
+
+        try{
+        viewModelScope.launch(Dispatchers.IO) {
+            val retroInstance = RetroInstance.getInstance().create(HarryPotterApi::class.java)
+            println("THE HOUSE IS : +$houseType")
+            val response = retroInstance.getAllHouse(houseType)
+
+            if(houseType == "gryffindor"){
+
+            for (i in 0 until response.size) {
+            val grifTable = GrifTable(i,response[i].actor, response[i].actor, response[i].image, response[i].name)
+            addGrif(grifTable)
+          }
+            }
+
+            if (houseType == "Slytherin") {
+            for (i in 0 until response.size) {
+            val slyTable = SlyTable(i,response[i].actor, response[i].actor, response[i].image, response[i].name)
+            addSly(slyTable)
+           }
+            }
+
+        if(houseType == "Hufflepuff"){
+
+            for (i in 0 until response.size) {
+            val hufTable = HufTable(i,response[i].actor, response[i].actor, response[i].image, response[i].name)
+            addHuff(hufTable)
+           }
+
+
+        }
+        if(houseType == "Ravenclaw"){
+
+            for (i in 0 until response.size) {
+                val ravtable = Ravtable(i,response[i].actor, response[i].actor, response[i].image, response[i].name)
+                addRav(ravtable)}
+        }
+
+            houseLiveData.postValue(response)
+        }}
+        catch (e: IOException) {
+            e.printStackTrace()
+            println("No INTERNET")
+            internetOff = true
+        }
+    }
+
+    fun makeAPiStudentCall(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val retroInstance = RetroInstance.getInstance().create(HarryPotterApi::class.java)
+            val response = retroInstance.getAllStudents()
+
+            studentLiveData.postValue(response)
+
+try {
+
+
+    for (i in 0 until response.size) {
+        val studentTable = StudentTable(
+            i,
+            response[i].actor,
+            response[i].actor,
+            response[i].image,
+            response[i].name
+        )
+        addStudentUser(studentTable)
+    }
+}           catch (e: IOException) {
+    e.printStackTrace()
+    println("No INTERNET")
+    internetOff = true
+}
+
+        }
+
 
     }
 
 
+    fun makeAPiStaffCall(){
+        try {
+
+
+        viewModelScope.launch(Dispatchers.IO) {
+           val retroInstance = RetroInstance.getInstance().create(HarryPotterApi::class.java)
+            val response = retroInstance.getAllStaff()
+            staffLiveData.postValue(response)
+
+            for (i in 0 until response.size) {
+            val staffTable = StaffTable(i,response[i].actor, response[i].actor, response[i].image, response[i].name)
+            addStaffUser(staffTable)
+           }
+        }}
+        catch (e: IOException) {
+            e.printStackTrace()
+            println("No INTERNET")
+            internetOff = true
+        }
+    }
+
+
+
+    fun addStaffUser(staffTable: StaffTable){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addUser(staffTable)
+
+        }
+    }
+    fun addAllUser(allTable: AllTable){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addAll(allTable)
+
+        }
+    }
+    fun addStudentUser(studentTable: StudentTable){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addStudent(studentTable)
+
+        }
+    }
+
+
+
+    fun addGrif(grifTable: GrifTable){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addGrif(grifTable)
+
+        }
+    }
+
+    fun addSly(slyTable: SlyTable){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addSly(slyTable)
+
+        }
+    }
+
+    fun addHuff(hufTable: HufTable){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addHuf(hufTable)
+
+        }
+    }
+
+    fun addRav(ravtable: Ravtable){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addRav(ravtable)
+
+        }
+    }
+
+    fun insertIntoUserDatabase(){
+
+        println("THE DATABASE ADDED PROPERLY")
+
+    }
+
+    fun readUserData(){
+        readAllData
+
+    }
+
+
+
+
 }
+
