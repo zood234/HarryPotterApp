@@ -55,14 +55,17 @@ class MainActivity : AppCompatActivity() {
 
 	viewModel.getStaffLiveObserver().observe(this, Observer<Staffs> {
 		if (it != null) {
+
+				val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
+
 			run {
 				for (i in 0 until it.size) {
 				data.add(
 					RVViewModel(
-						it[i].actor,
-						it[i].name,
-						it[i].house,
-						it[i].image
+						sortedList[i].actor,
+						sortedList[i].name,
+						sortedList[i].house,
+						sortedList[i].image
 				)
 			)
 				}
@@ -97,14 +100,15 @@ class MainActivity : AppCompatActivity() {
 		val data = ArrayList<RVViewModel>()
 		viewModel.getStudentLiveObserver().observe(this, Observer<Students> {
 			if (it != null) {
+				val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
 				run {
 					for (i in 0 until it.size) {
 						data.add(
 							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+								sortedList[i].actor,
+								sortedList[i].name,
+								sortedList[i].house,
+								sortedList[i].image
 							)
 						)}
 					val adapter = RVAdapter(data)
@@ -131,15 +135,21 @@ class MainActivity : AppCompatActivity() {
 		val data = ArrayList<RVViewModel>()
 		viewModel.getAllLiveObserver().observe(this, Observer<All> {
 
+
+
+
 			if (it != null) {
+				val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
+
 				run {
 					for (i in 0 until it.size) {
+
+
 						data.add(
-							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+							RVViewModel( sortedList[i].actor, sortedList[i].name,
+										sortedList[i].house,
+										sortedList[i].image
+
 
 							)
 						)}
@@ -182,14 +192,16 @@ class MainActivity : AppCompatActivity() {
 		val data = ArrayList<RVViewModel>()
 		viewModel.getHouseLiveObserver().observe(this, Observer<House> {
 			if (it != null) {
+				val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
+
 				run {
 					for (i in 0 until it.size) {
 						data.add(
 							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+								sortedList[i].actor,
+								sortedList[i].name,
+								sortedList[i].house,
+								sortedList[i].image
 
 							)
 						)
@@ -234,15 +246,18 @@ class MainActivity : AppCompatActivity() {
 		recyclerview.layoutManager = LinearLayoutManager(this)
 		val data = ArrayList<RVViewModel>()
 		viewModel.readAllData.observe(this, {
+
 			if (it != null) {
+
+				val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
 				run {
 					for (i in 0 until it.size) {
 						data.add(
 							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+								sortedList[i].actor,
+								sortedList[i].name,
+								sortedList[i].house,
+								sortedList[i].image
 
 							)
 						)
@@ -266,14 +281,16 @@ class MainActivity : AppCompatActivity() {
 		val data = ArrayList<RVViewModel>()
 		viewModel.readStudentData.observe(this, {
 			if (it != null) {
+				val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
+
 				run {
 					for (i in 0 until it.size) {
 						data.add(
 							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+								sortedList[i].actor,
+								sortedList[i].name,
+								sortedList[i].house,
+								sortedList[i].image
 
 							)
 						)
@@ -295,14 +312,15 @@ class MainActivity : AppCompatActivity() {
 		val data = ArrayList<RVViewModel>()
 		viewModel.readAllStaffData.observe(this, {
 			if (it != null) {
+				val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
 				run {
 					for (i in 0 until it.size) {
 						data.add(
 							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+								sortedList[i].actor,
+								sortedList[i].name,
+								sortedList[i].house,
+								sortedList[i].image
 
 							)
 						)
@@ -323,14 +341,16 @@ class MainActivity : AppCompatActivity() {
 				val data = ArrayList<RVViewModel>()
 				viewModel.readGrifData.observe(this, {
 					if (it != null) {
+						val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
+
 						run {
 							for (i in 0 until it.size) {
 								data.add(
 									RVViewModel(
-										it[i].actor,
-										it[i].name,
-										it[i].house,
-										it[i].image
+										sortedList[i].actor,
+										sortedList[i].name,
+										sortedList[i].house,
+										sortedList[i].image
 
 									)
 								)
@@ -354,12 +374,14 @@ class MainActivity : AppCompatActivity() {
 			if (it != null) {
 				run {
 					for (i in 0 until it.size) {
+						val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
+
 						data.add(
 							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+								sortedList[i].actor,
+								sortedList[i].name,
+								sortedList[i].house,
+								sortedList[i].image
 
 							)
 						)
@@ -383,12 +405,14 @@ class MainActivity : AppCompatActivity() {
 			if (it != null) {
 				run {
 					for (i in 0 until it.size) {
+						val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
+
 						data.add(
 							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+								sortedList[i].actor,
+								sortedList[i].name,
+								sortedList[i].house,
+								sortedList[i].image
 
 							)
 						)
@@ -410,14 +434,16 @@ class MainActivity : AppCompatActivity() {
 		val data = ArrayList<RVViewModel>()
 		viewModel.readHufData.observe(this, {
 			if (it != null) {
+				val sortedList = it.sortedWith(compareBy({ it.name }, { it.actor }))
+
 				run {
 					for (i in 0 until it.size) {
 						data.add(
 							RVViewModel(
-								it[i].actor,
-								it[i].name,
-								it[i].house,
-								it[i].image
+								sortedList[i].actor,
+								sortedList[i].name,
+								sortedList[i].house,
+								sortedList[i].image
 
 							)
 						)
