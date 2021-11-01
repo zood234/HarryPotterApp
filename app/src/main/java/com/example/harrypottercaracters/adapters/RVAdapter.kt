@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.harrypottercaracters.R
 import com.example.harrypottercaracters.models.other.RVViewModel
 import com.squareup.picasso.Picasso
-import java.io.IOException
 
 class RVAdapter(private val mList: List<RVViewModel>) : RecyclerView.Adapter<RVAdapter.ViewHolder>() {
 
@@ -29,10 +28,9 @@ class RVAdapter(private val mList: List<RVViewModel>) : RecyclerView.Adapter<RVA
         holder.textViewCharacter.text = ItemsViewModel.character
        // holder.textViewHouse.text = ItemsViewModel.house
       val picasso = Picasso.get()
-//        picasso.load(ItemsViewModel.imageUrl).into(holder.imageView)
 
         if (ItemsViewModel.imageUrl.isNullOrEmpty()) {
-            holder.imageView.setImageResource(R.drawable.ic_launcher_background);
+            holder.imageView.setImageResource(R.drawable.ic_launcher_background)
         } else {
             picasso.load(ItemsViewModel.imageUrl).into(holder.imageView)
         }
@@ -43,6 +41,7 @@ class RVAdapter(private val mList: List<RVViewModel>) : RecyclerView.Adapter<RVA
     override fun getItemCount(): Int {
         return mList.size
     }
+
 
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {

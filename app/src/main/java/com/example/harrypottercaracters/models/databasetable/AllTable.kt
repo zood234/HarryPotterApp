@@ -1,10 +1,10 @@
-package com.example.harrypottercaracters.models
+package com.example.harrypottercaracters.models.databasetable
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "grif_table")
-data class GrifTable(
+@Entity(tableName = "all_table")
+data class AllTable(
     @PrimaryKey(autoGenerate = true)
     val id:Int,
     val actor: String,

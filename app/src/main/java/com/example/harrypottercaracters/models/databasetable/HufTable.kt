@@ -1,11 +1,9 @@
-package com.example.harrypottercaracters.models
+package com.example.harrypottercaracters.models.databasetable
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
-@Entity(tableName = "user_table")
-
-data class StaffTable(
+@Entity(tableName = "huf_table")
+data class HufTable(
     @PrimaryKey(autoGenerate = true)
     val id:Int,
     val actor: String,

@@ -5,8 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.harrypottercaracters.interfaces.HarryPotterDao
+import com.example.harrypottercaracters.models.databasetable.*
 
-@Database(entities = [StaffTable::class, StudentTable::class, AllTable::class, GrifTable::class, HufTable::class,SlyTable::class,
+@Database(entities = [StaffTable::class, StudentTable::class, AllTable::class, GrifTable::class, HufTable::class, SlyTable::class,
     Ravtable::class]  , version = 2, exportSchema = false)
 
 
